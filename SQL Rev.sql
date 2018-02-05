@@ -778,3 +778,56 @@ insert into  Salary([NameID]
 
 
 InsEmp_Salary null,'Alexsandria',3,2000
+
+
+--------------------------------------------------------------------------------------------
+use Test0
+go
+select * from empdet
+
+----------------------------
+--Instead of trigger Update
+----------------------------
+update empdet set NAME='Mohamed',CITY='Alexsandria',JobName='Manger' where ID=1 --Error multiple base tables
+
+create trigger instedofupdate
+on empdet instead of update
+as
+begin
+--prevent user from update emp id
+if(update(ID))
+BEGIN
+Print 'You Cannot Change ID'
+Rollback
+end
+--If Jobname updated
+if(update(jobname))
+BEGIN
+
+declare @jobid nvarchar(50)
+select @jobid =Jobs.JobID from Jobs inner join inserted on jobs.JobName=inserted.JobName
+
+if(@jobid is null)
+begin
+print'This Job Not Avilabe '
+Rollback
+end
+else
+update Names set JobID=@jobid
+from inserted a join Names b on a.NAME=b.NAME
+end
+
+if(UPDATE(NAME))
+update Names set NAME=S.NAME 
+FROM Names  A JOIN inserted S ON A.NAME=S.NAME
+
+IF(UPDATE(CITY))
+UPDATE Names SET CITY=inserted.city
+from Names join inserted on Names.CITY=inserted.CITY
+
+end
+---------------------------------------------------
+--Testing
+
+Update empdet set JobName='Manager'
+where ID=7
