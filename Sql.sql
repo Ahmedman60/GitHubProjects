@@ -1,3 +1,6 @@
+
+--Mohamed Fathallah
+
 use Northwind
 -----------------------------------
 select distinct [Country]
