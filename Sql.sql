@@ -1,6 +1,6 @@
 
 --Mohamed Fathallah
-
+--Copyright me
 use Northwind
 -----------------------------------
 select distinct [Country]
